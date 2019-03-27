@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <IsServiceFabricServiceProject>True</IsServiceFabricServiceProject>
+    <ServerGarbageCollection>True</ServerGarbageCollection>
+    <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
+    <TargetLatestRuntimePatch>False</TargetLatestRuntimePatch>
+    <Platforms>AnyCPU;x64;x86</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.ServiceFabric.Actors" Version="3.3.644" />
+    <PackageReference Include="Microsoft.ServiceFabric.AspNetCore.Kestrel" Version="3.3.644" />
+    <PackageReference Include="Microsoft.ServiceFabric.Diagnostics.Internal" Version="3.3.644" />
+    <PackageReference Include="Microsoft.ServiceFabric.Services.Remoting" Version="3.3.644" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DeviceTwins.Fabric.DeviceActor.Interfaces\DeviceTwins.Fabric.DeviceActor.Interfaces.csproj" />
+    <ProjectReference Include="..\DeviceTwins.Fabric.DeviceRegistry.Interfaces\DeviceTwins.Fabric.DeviceRegistry.Interfaces.csproj" />
+  </ItemGroup>
+
+</Project>

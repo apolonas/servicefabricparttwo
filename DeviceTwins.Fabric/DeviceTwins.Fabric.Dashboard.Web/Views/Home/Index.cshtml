@@ -1,0 +1,166 @@
+﻿@{
+    ViewData["Title"] = "Device Telemetry Monitor";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Device Telemetry Monitor</h1><br />
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <div id="device-0" device-id="" class="card" hidden="hidden">
+                <div class="card-header">
+                    <b><span id="device-0-id"></span></b>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm">
+                            <canvas id="temperature-gauge-0"
+                                    data-type="radial-gauge"
+                                    data-value=""
+                                    data-width="175"
+                                    data-height="175"
+                                    data-title="Temperature"
+                                    data-highlights='[
+                                    { "from": 0, "to": 50, "color": "rgba(72,187,18,.50)" },
+                                    { "from": 50, "to": 79, "color": "rgba(230,220,21,.50)" },
+                                    { "from": 79, "to": 100, "color": "rgba(212,13,13,.50)" }]'></canvas>
+                        </div>
+                        <div class="col-sm">
+                            <canvas id="humidity-gauge-0"
+                                    data-type="radial-gauge"
+                                    data-value=""
+                                    data-width="175"
+                                    data-height="175"
+                                    data-title="Humidity"
+                                    data-highlights='[
+                                    { "from": 0, "to": 15, "color": "rgba(72,187,18,.50)" },
+                                    { "from": 15, "to": 70, "color": "rgba(230,220,21,.50)" },
+                                    { "from": 70, "to": 100, "color": "rgba(212,13,13,.50)" }]'></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div id="device-1" device-id="" class="card" hidden="hidden">
+                <div class="card-header">
+                    <b><span id="device-1-id"></span></b>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm">
+                            <canvas id="temperature-gauge-1"
+                                    data-type="radial-gauge"
+                                    data-value=""
+                                    data-width="175"
+                                    data-height="175"
+                                    data-title="Temperature"
+                                    data-highlights='[
+                                    { "from": 0, "to": 50, "color": "rgba(72,187,18,.50)" },
+                                    { "from": 50, "to": 79, "color": "rgba(230,220,21,.50)" },
+                                    { "from": 79, "to": 100, "color": "rgba(212,13,13,.50)" }]'></canvas>
+                        </div>
+                        <div class="col-sm">
+                            <canvas id="humidity-gauge-1"
+                                    data-type="radial-gauge"
+                                    data-value=""
+                                    data-width="175"
+                                    data-height="175"
+                                    data-title="Humidity"
+                                    data-highlights='[
+                                    { "from": 0, "to": 15, "color": "rgba(72,187,18,.50)" },
+                                    { "from": 15, "to": 70, "color": "rgba(230,220,21,.50)" },
+                                    { "from": 70, "to": 100, "color": "rgba(212,13,13,.50)" }]'></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div id="device-2" device-id="" class="card" hidden="hidden">
+                <div class="card-header">
+                    <b><span id="device-2-id"></span></b>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm">
+                            <canvas id="temperature-gauge-2"
+                                    data-type="radial-gauge"
+                                    data-value=""
+                                    data-width="175"
+                                    data-height="175"
+                                    data-title="Temperature"
+                                    data-highlights='[
+                                    { "from": 0, "to": 50, "color": "rgba(72,187,18,.50)" },
+                                    { "from": 50, "to": 79, "color": "rgba(230,220,21,.50)" },
+                                    { "from": 79, "to": 100, "color": "rgba(212,13,13,.50)" }]'></canvas>
+                        </div>
+                        <div class="col-sm">
+                            <canvas id="humidity-gauge-2"
+                                    data-type="radial-gauge"
+                                    data-value=""
+                                    data-width="175"
+                                    data-height="175"
+                                    data-title="Humidity"
+                                    data-highlights='[
+                                    { "from": 0, "to": 15, "color": "rgba(72,187,18,.50)" },
+                                    { "from": 15, "to": 70, "color": "rgba(230,220,21,.50)" },
+                                    { "from": 70, "to": 100, "color": "rgba(212,13,13,.50)" }]'></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+
+            $(".card").hide();
+            setInterval(getDevices, 1000);
+
+            function getDevices() {
+                var devicesUrl = "http://localhost:8232/api/devices";
+
+                $.getJSON(devicesUrl, {
+                    format: "json"
+                })
+                    .done(function (data) {
+                        $.each(data, function (key, value) {
+                            setDeviceIds(key, value.id);
+                            showHideGauges(key);
+                            getTelemetry(key, value.id);
+                        });
+                    });
+            };
+
+            function getTelemetry(key, deviceId) {
+                var telemetryApi = "http://localhost:8232/api/telemetry/" + deviceId;
+
+                $.getJSON(telemetryApi, {
+                    format: "json"
+                })
+                    .done(function (data) {
+                        $("#temperature-gauge-" + key).attr("data-value", data.temperature);
+                        $("#humidity-gauge-" + key).attr("data-value", data.humidity);
+                    });
+            };
+
+            function setDeviceIds(key, id) {
+                $("#device-" + key + "-id").text("Device: " + id);
+            }
+
+            function showHideGauges(key) {
+                $("#device-" + key).show();
+                $("#device-" + key).removeAttr('hidden')
+            };
+        });
+    </script>
+}
